@@ -202,7 +202,7 @@ const HomePage = () => {
               </div>
               <div>
                 <h4 className="font-semibold text-gray-900">Alex M.</h4>
-                <p className="text-sm text-gray-500">Askly user since 2023</p>
+                <p className="text-sm text-gray-500">Askly user since 2025</p>
               </div>
             </div>
             <blockquote className="text-lg text-gray-700 italic leading-relaxed">
