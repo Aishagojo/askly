@@ -9,16 +9,5 @@
         "buildCommand": "npm run build"
       }
     }
-  ],
-  "build": {
-    "env": {
-      "NODE_ENV": "production"
-    },
-    "cache": {
-      "node_modules": {
-        "path": "node_modules",
-        "maxAge": 86400
-      }
-    }
-  }
+  ]
 }
