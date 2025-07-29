@@ -1,0 +1,200 @@
+[debug] [2025-07-29T00:59:12.737Z] ----------------------------------------------------------------------
+[debug] [2025-07-29T00:59:12.742Z] Command:       /home/aisha-lul/.nvm/versions/node/v22.17.1/bin/node /home/aisha-lul/.nvm/versions/node/v22.17.1/bin/firebase init hosting
+[debug] [2025-07-29T00:59:12.743Z] CLI Version:   14.11.1
+[debug] [2025-07-29T00:59:12.743Z] Platform:      linux
+[debug] [2025-07-29T00:59:12.743Z] Node Version:  v22.17.1
+[debug] [2025-07-29T00:59:12.744Z] Time:          Tue Jul 29 2025 03:59:12 GMT+0300 (East Africa Time)
+[debug] [2025-07-29T00:59:12.744Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-07-29T00:59:12.750Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-07-29T00:59:12.751Z] > authorizing via signed-in user (aishaomarfarah@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/aisha-lul/Documents/askly-chatbot/askly-therepy-chatbot/frontend/client
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2025-07-29T00:59:17.844Z] Checked if tokens are valid: true, expires at: 1753754299779
+[debug] [2025-07-29T00:59:17.845Z] Checked if tokens are valid: true, expires at: 1753754299779
+[debug] [2025-07-29T00:59:17.851Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=100
+[debug] [2025-07-29T00:59:19.254Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-07-29T00:59:19.255Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[info] i  Using project asklychatbot (askly) 
+[info] 
+=== Hosting Setup
+[debug] [2025-07-29T00:59:22.115Z] Checked if tokens are valid: true, expires at: 1753754299779
+[debug] [2025-07-29T00:59:22.115Z] Checked if tokens are valid: true, expires at: 1753754299779
+[debug] [2025-07-29T00:59:22.116Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/asklychatbot [none]
+[debug] [2025-07-29T00:59:22.510Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/asklychatbot 200
+[debug] [2025-07-29T00:59:22.511Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/asklychatbot {"projectId":"asklychatbot","projectNumber":"125802386970","displayName":"askly","name":"projects/asklychatbot","resources":{"hostingSite":"asklychatbot"},"state":"ACTIVE","etag":"1_15270a4e-2340-4de8-886b-7b857c8f96a3"}
+[info] 
+[info] Your public directory is the folder (relative to your project directory) that
+[info] will contain Hosting assets to be uploaded with firebase deploy. If you
+[info] have a build process for your assets, use your build's output directory.
+[info] 
+[debug] [2025-07-29T00:59:34.798Z] >>> [apiv2][query] GET https://www.gstatic.com/firebasejs/releases.json [none]
+[debug] [2025-07-29T00:59:35.209Z] <<< [apiv2][status] GET https://www.gstatic.com/firebasejs/releases.json 200
+[debug] [2025-07-29T00:59:35.210Z] <<< [apiv2][body] GET https://www.gstatic.com/firebasejs/releases.json {"current":{"version":"12.0.0","browserURL":"https://www.gstatic.com/firebasejs/12.0.0/firebase.js","packageURL":"https://www.gstatic.com/firebasejs/12.0.0/firebase.tgz"},"live":{"version":"12.0","browserURL":"https://www.gstatic.com/firebasejs/live/12.0/firebase.js","packageURL":"https://www.gstatic.com/firebasejs/live/12.0/firebase.tgz"},"components":{"ai":"https://www.gstatic.com/firebasejs/12.0.0/firebase-ai.js","analytics":"https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js","app":"https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js","app-check":"https://www.gstatic.com/firebasejs/12.0.0/firebase-app-check.js","auth":"https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js","auth/cordova":"https://www.gstatic.com/firebasejs/12.0.0/firebase-auth/cordova.js","auth/web-extension":"https://www.gstatic.com/firebasejs/12.0.0/firebase-auth/web-extension.js","functions":"https://www.gstatic.com/firebasejs/12.0.0/firebase-functions.js","firestore":"https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js","firestore/lite":"https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore/lite.js","installations":"https://www.gstatic.com/firebasejs/12.0.0/firebase-installations.js","storage":"https://www.gstatic.com/firebasejs/12.0.0/firebase-storage.js","performance":"https://www.gstatic.com/firebasejs/12.0.0/firebase-performance.js","remote-config":"https://www.gstatic.com/firebasejs/12.0.0/firebase-remote-config.js","messaging":"https://www.gstatic.com/firebasejs/12.0.0/firebase-messaging.js","messaging/sw":"https://www.gstatic.com/firebasejs/12.0.0/firebase-messaging/sw.js","database":"https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js","data-connect":"https://www.gstatic.com/firebasejs/12.0.0/firebase-data-connect.js","firestore.memory":"https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.memory.js"}}
+[info] i  Skipping write of public/index.html 
+[info] 
+[info] i  Detected a .git folder at /home/aisha-lul/Documents/askly-chatbot/askly-therepy-chatbot 
+[info] i  Authorizing with GitHub to upload your service account to a GitHub repository's secrets store. 
+[info] 
+[info] Visit this URL on this device to log in:
+[info] https://github.com/login/oauth/authorize?client_id=89cf50f02ac6aaed3484&state=391628516&redirect_uri=http%3A%2F%2Flocalhost%3A9005&scope=read%3Auser%20repo%20public_repo
+[info] 
+[info] Waiting for authentication...
+[debug] [2025-07-29T01:00:17.132Z] >>> [apiv2][query] POST https://github.com/login/oauth/access_token [none]
+[debug] [2025-07-29T01:00:17.132Z] >>> [apiv2][body] POST https://github.com/login/oauth/access_token [stream]
+[debug] [2025-07-29T01:00:17.730Z] <<< [apiv2][status] POST https://github.com/login/oauth/access_token 200
+[debug] [2025-07-29T01:00:17.731Z] <<< [apiv2][body] POST https://github.com/login/oauth/access_token {"access_token":"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","token_type":"bearer","scope":"read:user,repo"}
+[debug] [2025-07-29T01:00:17.748Z] >>> [apiv2][query] GET https://api.github.com/user [none]
+[debug] [2025-07-29T01:00:18.433Z] <<< [apiv2][status] GET https://api.github.com/user 200
+[debug] [2025-07-29T01:00:18.433Z] <<< [apiv2][body] GET https://api.github.com/user {"login":"Aishagojo","id":124359762,"node_id":"U_kgDOB2mUUg","avatar_url":"https://avatars.githubusercontent.com/u/124359762?v=4","gravatar_id":"","url":"https://api.github.com/users/Aishagojo","html_url":"https://github.com/Aishagojo","followers_url":"https://api.github.com/users/Aishagojo/followers","following_url":"https://api.github.com/users/Aishagojo/following{/other_user}","gists_url":"https://api.github.com/users/Aishagojo/gists{/gist_id}","starred_url":"https://api.github.com/users/Aishagojo/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/Aishagojo/subscriptions","organizations_url":"https://api.github.com/users/Aishagojo/orgs","repos_url":"https://api.github.com/users/Aishagojo/repos","events_url":"https://api.github.com/users/Aishagojo/events{/privacy}","received_events_url":"https://api.github.com/users/Aishagojo/received_events","type":"User","user_view_type":"private","site_admin":false,"name":"aishaomaa","company":null,"blog":"","location":null,"email":null,"hireable":null,"bio":null,"twitter_username":null,"notification_email":null,"public_repos":20,"public_gists":0,"followers":53,"following":43,"created_at":"2023-02-03T11:29:18Z","updated_at":"2025-07-24T19:43:27Z","private_gists":0,"total_private_repos":50,"owned_private_repos":50,"disk_usage":65658,"collaborators":0,"two_factor_authentication":false,"plan":{"name":"pro","space":976562499,"collaborators":0,"private_repos":9999}}
+[info] 
+[info] ✔  Success! Logged into GitHub as Aishagojo 
+[info] 
+[debug] [2025-07-29T01:00:33.200Z] >>> [apiv2][query] GET https://api.github.com/repos//actions/secrets/public-key type=owner
+[debug] [2025-07-29T01:00:33.711Z] <<< [apiv2][status] GET https://api.github.com/repos//actions/secrets/public-key 404
+[debug] [2025-07-29T01:00:33.712Z] <<< [apiv2][body] GET https://api.github.com/repos//actions/secrets/public-key {"message":"Not Found","documentation_url":"https://docs.github.com/rest","status":"404"}
+[info] 
+[info] 
+[error] ⚠  The provided authorization cannot be used with this repository. If this repository is in an organization, did you remember to grant access? 
+[info] 
+[info] i  Action required: Visit this URL to ensure access has been granted to the appropriate organization(s) for the Firebase CLI GitHub OAuth App: 
+[info] https://github.com/settings/connections/applications/89cf50f02ac6aaed3484
+[info] 
+[debug] [2025-07-29T01:00:41.623Z] >>> [apiv2][query] GET https://api.github.com/repos//actions/secrets/public-key type=owner
+[debug] [2025-07-29T01:00:42.175Z] <<< [apiv2][status] GET https://api.github.com/repos//actions/secrets/public-key 404
+[debug] [2025-07-29T01:00:42.176Z] <<< [apiv2][body] GET https://api.github.com/repos//actions/secrets/public-key {"message":"Not Found","documentation_url":"https://docs.github.com/rest","status":"404"}
+[info] 
+[info] 
+[error] ⚠  The provided authorization cannot be used with this repository. If this repository is in an organization, did you remember to grant access? 
+[info] 
+[info] i  Action required: Visit this URL to ensure access has been granted to the appropriate organization(s) for the Firebase CLI GitHub OAuth App: 
+[info] https://github.com/settings/connections/applications/89cf50f02ac6aaed3484
+[info] 
+[debug] [2025-07-29T01:01:10.976Z] >>> [apiv2][query] GET https://api.github.com/repos/askly-chatbot/actions/secrets/public-key type=owner
+[debug] [2025-07-29T01:01:11.505Z] <<< [apiv2][status] GET https://api.github.com/repos/askly-chatbot/actions/secrets/public-key 404
+[debug] [2025-07-29T01:01:11.506Z] <<< [apiv2][body] GET https://api.github.com/repos/askly-chatbot/actions/secrets/public-key {"message":"Not Found","documentation_url":"https://docs.github.com/rest","status":"404"}
+[info] 
+[info] 
+[error] ⚠  The provided authorization cannot be used with this repository. If this repository is in an organization, did you remember to grant access? 
+[info] 
+[info] i  Action required: Visit this URL to ensure access has been granted to the appropriate organization(s) for the Firebase CLI GitHub OAuth App: 
+[info] https://github.com/settings/connections/applications/89cf50f02ac6aaed3484
+[info] 
+[debug] [2025-07-29T01:02:17.189Z] >>> [apiv2][query] GET https://api.github.com/repos/askly-chatbot/actions/secrets/public-key type=owner
+[debug] [2025-07-29T01:02:17.819Z] <<< [apiv2][status] GET https://api.github.com/repos/askly-chatbot/actions/secrets/public-key 404
+[debug] [2025-07-29T01:02:17.820Z] <<< [apiv2][body] GET https://api.github.com/repos/askly-chatbot/actions/secrets/public-key {"message":"Not Found","documentation_url":"https://docs.github.com/rest","status":"404"}
+[info] 
+[info] 
+[error] ⚠  The provided authorization cannot be used with this repository. If this repository is in an organization, did you remember to grant access? 
+[info] 
+[info] i  Action required: Visit this URL to ensure access has been granted to the appropriate organization(s) for the Firebase CLI GitHub OAuth App: 
+[info] https://github.com/settings/connections/applications/89cf50f02ac6aaed3484
+[info] 
+[debug] [2025-07-29T01:02:17.868Z] >>> [apiv2][query] GET https://api.github.com/repos/askly-chatbot/actions/secrets/public-key type=owner
+[debug] [2025-07-29T01:02:18.331Z] <<< [apiv2][status] GET https://api.github.com/repos/askly-chatbot/actions/secrets/public-key 404
+[debug] [2025-07-29T01:02:18.332Z] <<< [apiv2][body] GET https://api.github.com/repos/askly-chatbot/actions/secrets/public-key {"message":"Not Found","documentation_url":"https://docs.github.com/rest","status":"404"}
+[info] 
+[info] 
+[error] ⚠  The provided authorization cannot be used with this repository. If this repository is in an organization, did you remember to grant access? 
+[info] 
+[info] i  Action required: Visit this URL to ensure access has been granted to the appropriate organization(s) for the Firebase CLI GitHub OAuth App: 
+[info] https://github.com/settings/connections/applications/89cf50f02ac6aaed3484
+[info] 
+[debug] [2025-07-29T01:02:24.207Z] ----------------------------------------------------------------------
+[debug] [2025-07-29T01:02:24.211Z] Command:       /home/aisha-lul/.nvm/versions/node/v22.17.1/bin/node /home/aisha-lul/.nvm/versions/node/v22.17.1/bin/firebase init hosting
+[debug] [2025-07-29T01:02:24.211Z] CLI Version:   14.11.1
+[debug] [2025-07-29T01:02:24.212Z] Platform:      linux
+[debug] [2025-07-29T01:02:24.212Z] Node Version:  v22.17.1
+[debug] [2025-07-29T01:02:24.212Z] Time:          Tue Jul 29 2025 04:02:24 GMT+0300 (East Africa Time)
+[debug] [2025-07-29T01:02:24.213Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-07-29T01:02:24.220Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-07-29T01:02:24.220Z] > authorizing via signed-in user (aishaomarfarah@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/aisha-lul/Documents/askly-chatbot/askly-therepy-chatbot/frontend/client
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2025-07-29T01:02:27.699Z] Checked if tokens are valid: true, expires at: 1753754299779
+[debug] [2025-07-29T01:02:27.700Z] Checked if tokens are valid: true, expires at: 1753754299779
+[debug] [2025-07-29T01:02:27.707Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=100
+[debug] [2025-07-29T01:02:28.595Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-07-29T01:02:28.595Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[info] i  Using project asklychatbot (askly) 
+[info] 
+=== Hosting Setup
+[debug] [2025-07-29T01:02:30.873Z] Checked if tokens are valid: true, expires at: 1753754299779
+[debug] [2025-07-29T01:02:30.874Z] Checked if tokens are valid: true, expires at: 1753754299779
+[debug] [2025-07-29T01:02:30.874Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/asklychatbot [none]
+[debug] [2025-07-29T01:02:31.240Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/asklychatbot 200
+[debug] [2025-07-29T01:02:31.241Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/asklychatbot {"projectId":"asklychatbot","projectNumber":"125802386970","displayName":"askly","name":"projects/asklychatbot","resources":{"hostingSite":"asklychatbot"},"state":"ACTIVE","etag":"1_15270a4e-2340-4de8-886b-7b857c8f96a3"}
+[info] 
+[info] Your public directory is the folder (relative to your project directory) that
+[info] will contain Hosting assets to be uploaded with firebase deploy. If you
+[info] have a build process for your assets, use your build's output directory.
+[info] 
+[info] ✔  Wrote private/404.html 
+[debug] [2025-07-29T01:02:49.509Z] >>> [apiv2][query] GET https://www.gstatic.com/firebasejs/releases.json [none]
+[debug] [2025-07-29T01:02:49.936Z] <<< [apiv2][status] GET https://www.gstatic.com/firebasejs/releases.json 200
+[debug] [2025-07-29T01:02:49.937Z] <<< [apiv2][body] GET https://www.gstatic.com/firebasejs/releases.json {"current":{"version":"12.0.0","browserURL":"https://www.gstatic.com/firebasejs/12.0.0/firebase.js","packageURL":"https://www.gstatic.com/firebasejs/12.0.0/firebase.tgz"},"live":{"version":"12.0","browserURL":"https://www.gstatic.com/firebasejs/live/12.0/firebase.js","packageURL":"https://www.gstatic.com/firebasejs/live/12.0/firebase.tgz"},"components":{"ai":"https://www.gstatic.com/firebasejs/12.0.0/firebase-ai.js","analytics":"https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js","app":"https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js","app-check":"https://www.gstatic.com/firebasejs/12.0.0/firebase-app-check.js","auth":"https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js","auth/cordova":"https://www.gstatic.com/firebasejs/12.0.0/firebase-auth/cordova.js","auth/web-extension":"https://www.gstatic.com/firebasejs/12.0.0/firebase-auth/web-extension.js","functions":"https://www.gstatic.com/firebasejs/12.0.0/firebase-functions.js","firestore":"https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js","firestore/lite":"https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore/lite.js","installations":"https://www.gstatic.com/firebasejs/12.0.0/firebase-installations.js","storage":"https://www.gstatic.com/firebasejs/12.0.0/firebase-storage.js","performance":"https://www.gstatic.com/firebasejs/12.0.0/firebase-performance.js","remote-config":"https://www.gstatic.com/firebasejs/12.0.0/firebase-remote-config.js","messaging":"https://www.gstatic.com/firebasejs/12.0.0/firebase-messaging.js","messaging/sw":"https://www.gstatic.com/firebasejs/12.0.0/firebase-messaging/sw.js","database":"https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js","data-connect":"https://www.gstatic.com/firebasejs/12.0.0/firebase-data-connect.js","firestore.memory":"https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.memory.js"}}
+[info] ✔  Wrote private/index.html 
+[info] 
+[info] i  Detected a .git folder at /home/aisha-lul/Documents/askly-chatbot/askly-therepy-chatbot 
+[info] i  Authorizing with GitHub to upload your service account to a GitHub repository's secrets store. 
+[info] 
+[info] Visit this URL on this device to log in:
+[info] https://github.com/login/oauth/authorize?client_id=89cf50f02ac6aaed3484&state=843262894&redirect_uri=http%3A%2F%2Flocalhost%3A9005&scope=read%3Auser%20repo%20public_repo
+[info] 
+[info] Waiting for authentication...
+[debug] [2025-07-29T01:02:53.638Z] >>> [apiv2][query] POST https://github.com/login/oauth/access_token [none]
+[debug] [2025-07-29T01:02:53.639Z] >>> [apiv2][body] POST https://github.com/login/oauth/access_token [stream]
+[debug] [2025-07-29T01:02:54.275Z] <<< [apiv2][status] POST https://github.com/login/oauth/access_token 200
+[debug] [2025-07-29T01:02:54.276Z] <<< [apiv2][body] POST https://github.com/login/oauth/access_token {"access_token":"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","token_type":"bearer","scope":"read:user,repo"}
+[debug] [2025-07-29T01:02:54.289Z] >>> [apiv2][query] GET https://api.github.com/user [none]
+[debug] [2025-07-29T01:02:54.884Z] <<< [apiv2][status] GET https://api.github.com/user 200
+[debug] [2025-07-29T01:02:54.885Z] <<< [apiv2][body] GET https://api.github.com/user {"login":"Aishagojo","id":124359762,"node_id":"U_kgDOB2mUUg","avatar_url":"https://avatars.githubusercontent.com/u/124359762?v=4","gravatar_id":"","url":"https://api.github.com/users/Aishagojo","html_url":"https://github.com/Aishagojo","followers_url":"https://api.github.com/users/Aishagojo/followers","following_url":"https://api.github.com/users/Aishagojo/following{/other_user}","gists_url":"https://api.github.com/users/Aishagojo/gists{/gist_id}","starred_url":"https://api.github.com/users/Aishagojo/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/Aishagojo/subscriptions","organizations_url":"https://api.github.com/users/Aishagojo/orgs","repos_url":"https://api.github.com/users/Aishagojo/repos","events_url":"https://api.github.com/users/Aishagojo/events{/privacy}","received_events_url":"https://api.github.com/users/Aishagojo/received_events","type":"User","user_view_type":"private","site_admin":false,"name":"aishaomaa","company":null,"blog":"","location":null,"email":null,"hireable":null,"bio":null,"twitter_username":null,"notification_email":null,"public_repos":20,"public_gists":0,"followers":53,"following":43,"created_at":"2023-02-03T11:29:18Z","updated_at":"2025-07-24T19:43:27Z","private_gists":0,"total_private_repos":50,"owned_private_repos":50,"disk_usage":65658,"collaborators":0,"two_factor_authentication":false,"plan":{"name":"pro","space":976562499,"collaborators":0,"private_repos":9999}}
+[info] 
+[info] ✔  Success! Logged into GitHub as Aishagojo 
+[info] 
+[debug] [2025-07-29T01:03:21.873Z] >>> [apiv2][query] GET https://api.github.com/repos/askly-chatbot/actions/secrets/public-key type=owner
+[debug] [2025-07-29T01:03:22.469Z] <<< [apiv2][status] GET https://api.github.com/repos/askly-chatbot/actions/secrets/public-key 404
+[debug] [2025-07-29T01:03:22.470Z] <<< [apiv2][body] GET https://api.github.com/repos/askly-chatbot/actions/secrets/public-key {"message":"Not Found","documentation_url":"https://docs.github.com/rest","status":"404"}
+[info] 
+[info] 
+[error] ⚠  The provided authorization cannot be used with this repository. If this repository is in an organization, did you remember to grant access? 
+[info] 
+[info] i  Action required: Visit this URL to ensure access has been granted to the appropriate organization(s) for the Firebase CLI GitHub OAuth App: 
+[info] https://github.com/settings/connections/applications/89cf50f02ac6aaed3484
+[info] 
+[debug] [2025-07-29T01:04:25.492Z] >>> [apiv2][query] GET https://api.github.com/repos/askly-chatbot/actions/secrets/public-key type=owner
+[debug] [2025-07-29T01:04:26.433Z] <<< [apiv2][status] GET https://api.github.com/repos/askly-chatbot/actions/secrets/public-key 401
+[debug] [2025-07-29T01:04:26.434Z] <<< [apiv2][body] GET https://api.github.com/repos/askly-chatbot/actions/secrets/public-key {"message":"Bad credentials","documentation_url":"https://docs.github.com/rest","status":"401"}
