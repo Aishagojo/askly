@@ -3,7 +3,7 @@ import { Calendar, TrendingUp, Smile, Frown, Meh, AlertTriangle, Heart, Plus } f
 import { useMood } from '../contexts/MoodContext';
 
 const MoodTracker = () => {
-  const { entries, addEntry } = useMood();
+  const { entries, addEntry, loading } = useMood();
   const [selectedMood, setSelectedMood] = useState(null);
   const [note, setNote] = useState('');
   const [showAddEntry, setShowAddEntry] = useState(false);
@@ -16,24 +16,28 @@ const MoodTracker = () => {
     { value: 1, label: 'Difficult', icon: AlertTriangle, color: 'text-red-500', bg: 'bg-red-100' }
   ];
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (selectedMood === null) return;
 
     const entry = {
-      id: Date.now().toString(),
       mood: selectedMood,
       note,
       date: new Date()
     };
 
-    addEntry(entry);
-    setSelectedMood(null);
-    setNote('');
-    setShowAddEntry(false);
+    try {
+      await addEntry(entry);
+      setSelectedMood(null);
+      setNote('');
+      setShowAddEntry(false);
+    } catch (error) {
+      console.error("Failed to save mood entry:", error);
+      // You can add user feedback here (e.g., toast notification)
+    }
   };
 
   const getAverageMood = () => {
-    if (entries.length === 0) return 0;
+    if (entries.length === 0) return "0.0";
     const sum = entries.reduce((acc, entry) => acc + entry.mood, 0);
     return (sum / entries.length).toFixed(1);
   };
@@ -46,7 +50,9 @@ const MoodTracker = () => {
     }).reverse();
 
     return last7Days.map(dateString => {
-      const dayEntries = entries.filter(entry => entry.date.toDateString() === dateString);
+      const dayEntries = entries.filter(entry => 
+        entry.date.toDateString() === dateString
+      );
       const avgMood = dayEntries.length > 0 
         ? dayEntries.reduce((sum, entry) => sum + entry.mood, 0) / dayEntries.length 
         : 0;
@@ -79,63 +85,114 @@ const MoodTracker = () => {
           <button
             onClick={() => setShowAddEntry(true)}
             className="flex items-center space-x-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+            disabled={loading}
           >
             <Plus className="w-4 h-4" />
-            <span>Log Mood</span>
+            <span>{loading ? "Loading..." : "Log Mood"}</span>
           </button>
         </div>
       </div>
 
-      {/* Stats Overview */}
-      <div className="grid md:grid-cols-3 gap-6 mb-6">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center space-x-3 mb-2">
-            <Heart className="w-5 h-5 text-pink-500" />
-            <span className="text-sm font-medium text-gray-600">Average Mood</span>
-          </div>
-          <div className="text-2xl font-bold text-gray-900">{getAverageMood()}/5</div>
+      {loading ? (
+        <div className="text-center py-12">
+          <p className="text-gray-600">Loading your mood history...</p>
         </div>
-        
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center space-x-3 mb-2">
-            <Calendar className="w-5 h-5 text-blue-500" />
-            <span className="text-sm font-medium text-gray-600">Total Entries</span>
-          </div>
-          <div className="text-2xl font-bold text-gray-900">{entries.length}</div>
-        </div>
-        
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center space-x-3 mb-2">
-            <TrendingUp className="w-5 h-5 text-green-500" />
-            <span className="text-sm font-medium text-gray-600">This Week</span>
-          </div>
-          <div className="text-2xl font-bold text-gray-900">
-            {weeklyData.filter(d => d.count > 0).length} days
-          </div>
-        </div>
-      </div>
-
-      {/* Weekly Chart */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Weekly Mood Trend</h3>
-        <div className="h-48 flex items-end justify-between space-x-2">
-          {weeklyData.map((day, index) => (
-            <div key={index} className="flex-1 flex flex-col items-center">
-              <div className="w-full bg-gray-100 rounded-t-lg relative" style={{ height: '160px' }}>
-                {day.mood > 0 && (
-                  <div
-                    className="w-full bg-gradient-to-t from-orange-500 to-pink-500 rounded-t-lg absolute bottom-0"
-                    style={{ height: `${(day.mood / 5) * 100}%` }}
-                  ></div>
-                )}
+      ) : (
+        <>
+          {/* Stats Overview */}
+          <div className="grid md:grid-cols-3 gap-6 mb-6">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+              <div className="flex items-center space-x-3 mb-2">
+                <Heart className="w-5 h-5 text-pink-500" />
+                <span className="text-sm font-medium text-gray-600">Average Mood</span>
               </div>
-              <div className="text-xs text-gray-600 mt-2 text-center">
-                {new Date(day.date).toLocaleDateString([], { weekday: 'short' })}
+              <div className="text-2xl font-bold text-gray-900">{getAverageMood()}/5</div>
+            </div>
+            
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+              <div className="flex items-center space-x-3 mb-2">
+                <Calendar className="w-5 h-5 text-blue-500" />
+                <span className="text-sm font-medium text-gray-600">Total Entries</span>
+              </div>
+              <div className="text-2xl font-bold text-gray-900">{entries.length}</div>
+            </div>
+            
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+              <div className="flex items-center space-x-3 mb-2">
+                <TrendingUp className="w-5 h-5 text-green-500" />
+                <span className="text-sm font-medium text-gray-600">This Week</span>
+              </div>
+              <div className="text-2xl font-bold text-gray-900">
+                {weeklyData.filter(d => d.count > 0).length} days
               </div>
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
+
+          {/* Weekly Chart */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Weekly Mood Trend</h3>
+            <div className="h-48 flex items-end justify-between space-x-2">
+              {weeklyData.map((day, index) => (
+                <div key={index} className="flex-1 flex flex-col items-center">
+                  <div className="w-full bg-gray-100 rounded-t-lg relative" style={{ height: '160px' }}>
+                    {day.mood > 0 && (
+                      <div
+                        className="w-full bg-gradient-to-t from-orange-500 to-pink-500 rounded-t-lg absolute bottom-0"
+                        style={{ height: `${(day.mood / 5) * 100}%` }}
+                      ></div>
+                    )}
+                  </div>
+                  <div className="text-xs text-gray-600 mt-2 text-center">
+                    {new Date(day.date).toLocaleDateString([], { weekday: 'short' })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Recent Entries */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Entries</h3>
+            
+            {entries.length === 0 ? (
+              <div className="text-center py-8">
+                <TrendingUp className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-600 mb-4">No mood entries yet</p>
+                <button
+                  onClick={() => setShowAddEntry(true)}
+                  className="px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+                >
+                  Log Your First Mood
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {entries.slice(0, 5).map((entry) => {
+                  const mood = moods.find(m => m.value === entry.mood);
+                  return (
+                    <div key={entry.id} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                      <div className={`p-2 rounded-lg ${mood?.bg}`}>
+                        {mood && <mood.icon className={`w-5 h-5 ${mood.color}`} />}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <span className="font-medium text-gray-900">{mood?.label}</span>
+                          <span className="text-sm text-gray-500">
+                            {entry.date.toLocaleDateString()} at {entry.date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </span>
+                        </div>
+                        {entry.note && (
+                          <p className="text-sm text-gray-600 mt-1">{entry.note}</p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </>
+      )}
 
       {/* Add Entry Modal */}
       {showAddEntry && (
@@ -200,48 +257,6 @@ const MoodTracker = () => {
           </div>
         </div>
       )}
-
-      {/* Recent Entries */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Entries</h3>
-        
-        {entries.length === 0 ? (
-          <div className="text-center py-8">
-            <TrendingUp className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-600 mb-4">No mood entries yet</p>
-            <button
-              onClick={() => setShowAddEntry(true)}
-              className="px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
-            >
-              Log Your First Mood
-            </button>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {entries.slice(0, 5).map((entry) => {
-              const mood = moods.find(m => m.value === entry.mood);
-              return (
-                <div key={entry.id} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-                  <div className={`p-2 rounded-lg ${mood?.bg}`}>
-                    {mood && <mood.icon className={`w-5 h-5 ${mood.color}`} />}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-2">
-                      <span className="font-medium text-gray-900">{mood?.label}</span>
-                      <span className="text-sm text-gray-500">
-                        {entry.date.toLocaleDateString()} at {entry.date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </span>
-                    </div>
-                    {entry.note && (
-                      <p className="text-sm text-gray-600 mt-1">{entry.note}</p>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
     </div>
   );
 };

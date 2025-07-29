@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Plus, Book, Calendar, Search, Filter, Trash2, Edit3 } from 'lucide-react';
+import { Plus, Book, Calendar, Search, Trash2, Edit3 } from 'lucide-react';
 import { useJournal } from '../contexts/JournalContext';
 
 const JournalPage = () => {
-  const { entries, addEntry, deleteEntry, updateEntry } = useJournal();
+  const { entries, addEntry, deleteEntry, updateEntry, loading, error } = useJournal();
   const [showNewEntry, setShowNewEntry] = useState(false);
   const [editingEntry, setEditingEntry] = useState(null);
   const [newEntryContent, setNewEntryContent] = useState('');
@@ -21,31 +21,37 @@ const JournalPage = () => {
     "What are three things that went well today?"
   ];
 
-  const handleSaveEntry = () => {
+  const handleSaveEntry = async () => {
     if (!newEntryContent.trim()) return;
-
-    const entry = {
-      id: Date.now().toString(),
-      content: newEntryContent,
-      date: new Date(),
-      prompt: selectedPrompt
-    };
-
-    addEntry(entry);
-    setNewEntryContent('');
-    setSelectedPrompt('');
-    setShowNewEntry(false);
+    
+    try {
+      await addEntry({
+        content: newEntryContent,
+        prompt: selectedPrompt
+      });
+      setNewEntryContent('');
+      setSelectedPrompt('');
+      setShowNewEntry(false);
+    } catch (err) {
+      alert("Failed to save entry. Please try again.");
+    }
   };
 
-  const handleUpdateEntry = (id, content) => {
-    updateEntry(id, content);
-    setEditingEntry(null);
+  const handleUpdateEntry = async (id, content) => {
+    try {
+      await updateEntry(id, content);
+      setEditingEntry(null);
+    } catch (err) {
+      alert("Failed to update entry. Please try again.");
+    }
   };
 
-  const filteredEntries = entries.filter(entry =>
-    entry.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    entry.prompt?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredEntries = entries
+    .filter(entry => 
+      entry.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (entry.prompt && entry.prompt.toLowerCase().includes(searchTerm.toLowerCase()))
+    )
+    .sort((a, b) => new Date(b.date) - new Date(a.date)); // Newest first
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -65,12 +71,29 @@ const JournalPage = () => {
           <button
             onClick={() => setShowNewEntry(true)}
             className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            disabled={loading}
           >
             <Plus className="w-4 h-4" />
-            <span>New Entry</span>
+            <span>{loading ? "Processing..." : "New Entry"}</span>
           </button>
         </div>
       </div>
+
+      {/* Error Message */}
+      {error && (
+        <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+          <div className="flex items-center">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-red-700">{error}</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Search and Filter */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
@@ -83,6 +106,7 @@ const JournalPage = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              disabled={loading}
             />
           </div>
           <div className="flex items-center space-x-2 text-gray-600">
@@ -91,6 +115,106 @@ const JournalPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Loading State */}
+      {loading && entries.length === 0 && (
+        <div className="text-center py-12">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-600 mb-4"></div>
+          <p className="text-gray-600">Loading your journal entries...</p>
+        </div>
+      )}
+
+      {/* Empty State */}
+      {!loading && filteredEntries.length === 0 && (
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-12 text-center">
+          <Book className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            {searchTerm ? 'No matching entries' : 'No entries yet'}
+          </h3>
+          <p className="text-gray-600 mb-6">
+            {searchTerm ? 'Try a different search term.' : 'Start by creating your first entry.'}
+          </p>
+          {!searchTerm && (
+            <button
+              onClick={() => setShowNewEntry(true)}
+              className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Create First Entry
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Journal Entries */}
+      {!loading && filteredEntries.length > 0 && (
+        <div className="space-y-4">
+          {filteredEntries.map((entry) => (
+            <div key={entry.id} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-2 text-sm text-gray-500 mb-2">
+                    <Calendar className="w-4 h-4" />
+                    <span>{new Date(entry.date).toLocaleDateString()}</span>
+                    <span>{new Date(entry.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                  </div>
+                  {entry.prompt && (
+                    <div className="mb-3 p-3 bg-green-50 rounded-lg border border-green-200">
+                      <p className="text-green-800 text-sm font-medium">{entry.prompt}</p>
+                    </div>
+                  )}
+                </div>
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => setEditingEntry(entry.id)}
+                    className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                    disabled={loading}
+                  >
+                    <Edit3 className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => deleteEntry(entry.id)}
+                    className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    disabled={loading}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+              
+              {editingEntry === entry.id ? (
+                <div>
+                  <textarea
+                    defaultValue={entry.content}
+                    className="w-full h-32 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none mb-3"
+                  />
+                  <div className="flex justify-end space-x-2">
+                    <button
+                      onClick={() => setEditingEntry(null)}
+                      className="px-3 py-1 text-gray-600 hover:text-gray-800 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => {
+                        const textarea = document.querySelector('textarea');
+                        handleUpdateEntry(entry.id, textarea.value);
+                      }}
+                      className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                      disabled={loading}
+                    >
+                      {loading ? "Saving..." : "Save"}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="prose max-w-none">
+                  <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{entry.content}</p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* New Entry Modal */}
       {showNewEntry && (
@@ -110,6 +234,7 @@ const JournalPage = () => {
                   value={selectedPrompt}
                   onChange={(e) => setSelectedPrompt(e.target.value)}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  disabled={loading}
                 >
                   <option value="">Free writing - no prompt</option>
                   {prompts.map((prompt, index) => (
@@ -130,6 +255,7 @@ const JournalPage = () => {
                   onChange={(e) => setNewEntryContent(e.target.value)}
                   placeholder="Start writing your thoughts..."
                   className="w-full h-64 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                  disabled={loading}
                 />
               </div>
 
@@ -141,110 +267,22 @@ const JournalPage = () => {
                     setSelectedPrompt('');
                   }}
                   className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                  disabled={loading}
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSaveEntry}
-                  disabled={!newEntryContent.trim()}
+                  disabled={!newEntryContent.trim() || loading}
                   className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  Save Entry
+                  {loading ? "Saving..." : "Save Entry"}
                 </button>
               </div>
             </div>
           </div>
         </div>
       )}
-
-      {/* Journal Entries */}
-      <div className="space-y-4">
-        {filteredEntries.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-12 text-center">
-            <Book className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">No entries yet</h3>
-            <p className="text-gray-600 mb-6">
-              {searchTerm ? 'No entries match your search.' : 'Start your journaling journey by creating your first entry.'}
-            </p>
-            {!searchTerm && (
-              <button
-                onClick={() => setShowNewEntry(true)}
-                className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-              >
-                Create First Entry
-              </button>
-            )}
-          </div>
-        ) : (
-          filteredEntries.map((entry) => (
-            <div key={entry.id} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-2 text-sm text-gray-500 mb-2">
-                    <Calendar className="w-4 h-4" />
-                    <span>{entry.date.toLocaleDateString()}</span>
-                    <span>{entry.date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                  </div>
-                  {entry.prompt && (
-                    <div className="mb-3 p-3 bg-green-50 rounded-lg border border-green-200">
-                      <p className="text-green-800 text-sm font-medium">{entry.prompt}</p>
-                    </div>
-                  )}
-                </div>
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => setEditingEntry(entry.id)}
-                    className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                  >
-                    <Edit3 className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => deleteEntry(entry.id)}
-                    className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-              
-              {editingEntry === entry.id ? (
-                <div>
-                  <textarea
-                    defaultValue={entry.content}
-                    className="w-full h-32 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none mb-3"
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && e.ctrlKey) {
-                        handleUpdateEntry(entry.id, e.currentTarget.value);
-                      }
-                    }}
-                  />
-                  <div className="flex justify-end space-x-2">
-                    <button
-                      onClick={() => setEditingEntry(null)}
-                      className="px-3 py-1 text-gray-600 hover:text-gray-800 transition-colors"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        const textarea = e.currentTarget.parentElement?.previousElementSibling;
-                        handleUpdateEntry(entry.id, textarea.value);
-                      }}
-                      className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
-                    >
-                      Save
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="prose max-w-none">
-                  <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{entry.content}</p>
-                </div>
-              )}
-            </div>
-          ))
-        )}
-      </div>
     </div>
   );
 };
