@@ -1,1 +1,1 @@
- askly-chat is therepy web app where it the student aree doing the thinsg therpy are unoversiyy student  are happing in the chatbotwheere where is happing  it happing the commit it happing 
+ askly-chat is therepy web app where it the student aree doing the thinsg therpy are unoversiyy student  are happing in the chatbotwheere where is happing  it happing the commit it happing  the chat
