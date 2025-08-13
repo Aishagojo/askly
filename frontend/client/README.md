@@ -1,1 +1,1 @@
- askly-chat is therepy web app where it the student ad rr
+ askly-chat is therepy web app where it the student aree doing 
