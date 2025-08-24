@@ -7,19 +7,20 @@ import JournalPage from './pages/JournalPage';
 import MindfulnessPage from './pages/MindfulnessPage';
 import ResourcesPage from './pages/ResourcePage';
 import MoodTracker from './pages/MoodTracker';
+import Signup from './pages/Signup'; // Add signup/login pages if needed
+import Login from './pages/Login';
 import { ChatProvider } from './contexts/ChatContext';
 import { JournalProvider } from './contexts/JournalContext';
 import { MoodProvider } from './contexts/MoodContext';
+import { AuthProvider } from './contexts/AuthContext'; // ✅ Add this import
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate app initialization
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 1000);
-
     return () => clearTimeout(timer);
   }, []);
 
@@ -36,27 +37,31 @@ function App() {
   }
 
   return (
-    <ChatProvider>
-      <JournalProvider>
-        <MoodProvider>
-          <Router>
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
-              <Header />
-              <main className="pt-16">
-                <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/chat" element={<ChatPage />} />
-                  <Route path="/journal" element={<JournalPage />} />
-                  <Route path="/mindfulness" element={<MindfulnessPage />} />
-                  <Route path="/resources" element={<ResourcesPage />} />
-                  <Route path="/mood" element={<MoodTracker />} />
-                </Routes>
-              </main>
-            </div>
-          </Router>
-        </MoodProvider>
-      </JournalProvider>
-    </ChatProvider>
+    <AuthProvider> {/* ✅ Wrap everything inside AuthProvider */}
+      <ChatProvider>
+        <JournalProvider>
+          <MoodProvider>
+            <Router>
+              <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+                <Header />
+                <main className="pt-16">
+                  <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/chat" element={<ChatPage />} />
+                    <Route path="/journal" element={<JournalPage />} />
+                    <Route path="/mindfulness" element={<MindfulnessPage />} />
+                    <Route path="/resources" element={<ResourcesPage />} />
+                    <Route path="/mood" element={<MoodTracker />} />
+                    <Route path="/signup" element={<Signup />} />
+                    <Route path="/login" element={<Login />} />
+                  </Routes>
+                </main>
+              </div>
+            </Router>
+          </MoodProvider>
+        </JournalProvider>
+      </ChatProvider>
+    </AuthProvider>
   );
 }
 
