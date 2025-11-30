@@ -1,17 +1,25 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { useAuth } from './AuthContext';
 
 const JournalContext = createContext();
 
 export const JournalProvider = ({ children }) => {
+  const { user } = useAuth();
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null); // Added error state
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!user?.uid) {
+      setEntries([]);
+      setLoading(false);
+      setError('User not authenticated');
+      return;
+    }
     const unsubscribe = onSnapshot(
-      collection(db, 'journalEntries'),
+      collection(db, 'journalEntries', user.uid, 'entries'),
       (snapshot) => {
         const journalEntries = snapshot.docs.map(doc => ({
           id: doc.id,
@@ -20,7 +28,7 @@ export const JournalProvider = ({ children }) => {
         }));
         setEntries(journalEntries);
         setLoading(false);
-        setError(null); // Clear error on successful load
+        setError(null);
       },
       (error) => {
         console.error("Error fetching entries: ", error);
@@ -28,19 +36,19 @@ export const JournalProvider = ({ children }) => {
         setLoading(false);
       }
     );
-
     return () => unsubscribe();
-  }, []);
+  }, [user]);
 
   const addEntry = async (entry) => {
+    if (!user?.uid) throw new Error('User not authenticated');
     setLoading(true);
     try {
-      await addDoc(collection(db, 'journalEntries'), {
+      await addDoc(collection(db, 'journalEntries', user.uid, 'entries'), {
         content: entry.content,
-        prompt: entry.prompt || null, // Handle undefined prompt
-        date: serverTimestamp() // Use server timestamp instead of client-side
+        prompt: entry.prompt || null,
+        date: serverTimestamp()
       });
-      setError(null); // Clear error on success
+      setError(null);
     } catch (error) {
       console.error("Error adding entry: ", error);
       setError("Failed to save entry. Please try again.");
@@ -51,9 +59,10 @@ export const JournalProvider = ({ children }) => {
   };
 
   const deleteEntry = async (id) => {
+    if (!user?.uid) throw new Error('User not authenticated');
     setLoading(true);
     try {
-      await deleteDoc(doc(db, 'journalEntries', id));
+      await deleteDoc(doc(db, 'journalEntries', user.uid, 'entries', id));
       setError(null);
     } catch (error) {
       console.error("Error deleting entry: ", error);
@@ -65,11 +74,12 @@ export const JournalProvider = ({ children }) => {
   };
 
   const updateEntry = async (id, newContent) => {
+    if (!user?.uid) throw new Error('User not authenticated');
     setLoading(true);
     try {
-      await updateDoc(doc(db, 'journalEntries', id), {
+      await updateDoc(doc(db, 'journalEntries', user.uid, 'entries', id), {
         content: newContent,
-        lastUpdated: serverTimestamp() // Add update timestamp
+        lastUpdated: serverTimestamp()
       });
       setError(null);
     } catch (error) {
@@ -89,7 +99,7 @@ export const JournalProvider = ({ children }) => {
         deleteEntry, 
         updateEntry, 
         loading,
-        error // Make error available to components
+        error
       }}
     >
       {children}

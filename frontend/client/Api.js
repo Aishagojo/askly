@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5050/api/chat";
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5050/api/chat";
 
 export const sendMessageToBot = async (userMessage) => {
   const controller = new AbortController();

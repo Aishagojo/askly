@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Heart, Menu, X, MessageCircle, BookOpen, Flower, Shield, BarChart3, LogIn, UserPlus, LogOut } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Heart, Menu, X, LogIn, MessageCircle, BookOpen, Flower, Shield, BarChart3, Cog } from 'lucide-react';
 import { useAuth } from  '../contexts/AuthContext';
 
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
   const location = useLocation();
-  const { user, logout } = useAuth(); // Add this line
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,23 +20,34 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navigationItems = [
+  const publicNavigationItems = [
     { path: '/', label: 'Home', icon: Heart },
-    { path: '/chat', label: 'Chat', icon: MessageCircle },
+  ];
+
+  // Show more features after login
+  const privateNavigationItems = [
+    { path: '/chat', label: 'Chatbot', icon: MessageCircle },
     { path: '/journal', label: 'Journal', icon: BookOpen },
-    { path: '/mindfulness', label: 'Mindfulness', icon: Flower },
     { path: '/mood', label: 'Mood Tracker', icon: BarChart3 },
+    { path: '/mindfulness', label: 'Mindfulness', icon: Flower },
     { path: '/resources', label: 'Resources', icon: Shield },
   ];
 
+  const navigationItems = user ? privateNavigationItems : publicNavigationItems;
+
   const isActive = (path) => location.pathname === path;
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+  };
 
   const authItems = user
     ? [
         {
-          label: 'Logout',
-          icon: LogOut,
-          onClick: logout,
+          label: user.displayName?.split(' ')[0]?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase() || '',
+          icon: null,
+          onClick: handleLogout,
           isButton: true,
         },
       ]
@@ -43,11 +56,6 @@ const Header = () => {
           path: '/login',
           label: 'Login',
           icon: LogIn,
-        },
-        {
-          path: '/signup',
-          label: 'Signup',
-          icon: UserPlus,
         },
       ];
 
@@ -60,7 +68,7 @@ const Header = () => {
             <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center group-hover:rotate-12 transition-transform">
               <Heart className="w-4 h-4 text-white" fill="currentColor" />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Askly</span>
+            <span className="text-xl font-extrabold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Askly</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -81,14 +89,34 @@ const Header = () => {
             ))}
             {authItems.map(({ path, label, icon: Icon, onClick, isButton }) =>
               isButton ? (
-                <button
-                  key={label}
-                  onClick={onClick}
-                  className="flex items-center space-x-2 px-4 py-2 rounded-lg text-gray-600 hover:text-red-600 hover:bg-red-50 transition-all"
-                >
-                  <Icon className="w-4 h-4 text-red-500" />
-                  <span className="font-medium text-sm">{label}</span>
-                </button>
+                <div className="relative">
+                  <button
+                    key={label}
+                    onClick={() => setShowMenu((prev) => !prev)}
+                    className="flex items-center justify-center w-12 h-10 p-2 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 text-white font-bold text-2xl shadow-md hover:scale-105 transition-transform border-2 border-white"
+                    title="Account"
+                  >
+                    {label}
+                  </button>
+                  {showMenu && (
+                    <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border z-50">
+                      <button
+                        className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-indigo-50 rounded-t-xl"
+                        onClick={() => { setShowMenu(false); /* open settings modal here */ }}
+                      >
+                        <Cog className="w-4 h-4 mr-2 text-indigo-500" />
+                        Settings
+                      </button>
+                      <button
+                        className="flex items-center w-full px-4 py-2 text-red-600 hover:bg-red-50 rounded-b-xl"
+                        onClick={() => { setShowMenu(false); onClick(); }}
+                      >
+                        <span className="font-bold mr-2">⎋</span>
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
               ) : (
                 <Link
                   key={path}
@@ -128,10 +156,10 @@ const Header = () => {
                       setIsMenuOpen(false);
                       onClick();
                     }}
-                    className="flex w-full items-center space-x-3 px-4 py-3 mx-2 rounded-lg text-gray-600 hover:text-red-600 hover:bg-red-50 transition-all"
+                    className="flex items-center justify-center w-9 h-9 rounded-full bg-blue-600 text-white font-bold text-lg shadow hover:bg-blue-700 transition-colors"
+                    title="Logout"
                   >
-                    <Icon className="w-5 h-5 text-red-500" />
-                    <span className="font-medium">{label}</span>
+                    {label}
                   </button>
                 ) : (
                   <Link

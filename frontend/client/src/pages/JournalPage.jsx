@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Plus, Book, Calendar, Search, Trash2, Edit3 } from 'lucide-react';
 import { useJournal } from '../contexts/JournalContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const JournalPage = () => {
+  const { user } = useAuth();
   const { entries, addEntry, deleteEntry, updateEntry, loading, error } = useJournal();
   const [showNewEntry, setShowNewEntry] = useState(false);
   const [editingEntry, setEditingEntry] = useState(null);
@@ -53,8 +55,17 @@ const JournalPage = () => {
     )
     .sort((a, b) => new Date(b.date) - new Date(a.date)); // Newest first
 
+  if (!user) {
+    return (
+      <div className="max-w-xl mx-auto mt-10 p-6 bg-white rounded-xl shadow text-center">
+        <h2 className="text-xl font-bold mb-2">Please log in to access your journal.</h2>
+        <p className="text-gray-600">You must be signed in to view and save journal entries.</p>
+      </div>
+    );
+  }
+  // Show avatar and name
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-2xl mx-auto mt-8 p-4 bg-white rounded-xl shadow">
       {/* Header */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
         <div className="flex items-center justify-between">

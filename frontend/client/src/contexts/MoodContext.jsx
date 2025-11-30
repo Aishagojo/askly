@@ -1,32 +1,35 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { collection, addDoc, onSnapshot } from 'firebase/firestore';
+import { useAuth } from './AuthContext';
 
 export const MoodContext = createContext();
 
 export const MoodProvider = ({ children }) => {
+  const { user } = useAuth();
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, 'moodEntries'), (snapshot) => {
+    if (!user?.uid) return;
+    const unsubscribe = onSnapshot(collection(db, 'moodTracker', user.uid, 'entries'), (snapshot) => {
       const moodEntries = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
-        date: doc.data().date.toDate() // Convert Firestore timestamp to JS Date
+        date: doc.data().date?.toDate() || new Date()
       }));
       setEntries(moodEntries);
       setLoading(false);
     });
-
     return () => unsubscribe();
-  }, []);
+  }, [user]);
 
   const addEntry = async (entry) => {
+    if (!user?.uid) throw new Error('User not authenticated');
     try {
-      await addDoc(collection(db, 'moodEntries'), {
+      await addDoc(collection(db, 'moodTracker', user.uid, 'entries'), {
         ...entry,
-        date: new Date(entry.date) // Ensure date is properly stored
+        date: new Date(entry.date)
       });
     } catch (error) {
       console.error("Error adding mood entry: ", error);

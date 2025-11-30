@@ -13,6 +13,7 @@ import { ChatProvider } from './contexts/ChatContext';
 import { JournalProvider } from './contexts/JournalContext';
 import { MoodProvider } from './contexts/MoodContext';
 import { AuthProvider } from './contexts/AuthContext'; // ✅ Add this import
+import Footer from './components/Footer';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -42,9 +43,9 @@ function App() {
         <JournalProvider>
           <MoodProvider>
             <Router>
-              <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+              <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex flex-col">
                 <Header />
-                <main className="pt-16">
+                <main className="pt-16 flex-1 w-full flex flex-col items-center justify-center">
                   <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/chat" element={<ChatPage />} />
@@ -56,6 +57,7 @@ function App() {
                     <Route path="/login" element={<Login />} />
                   </Routes>
                 </main>
+                <Footer />
               </div>
             </Router>
           </MoodProvider>

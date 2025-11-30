@@ -21,7 +21,7 @@ const Login = () => {
       setError('');
       setLoading(true);
       await login(email, password);
-      navigate('/dashboard');
+  navigate('/chat');
     } catch (err) {
       console.error('Login error:', err);
       setError('Failed to log in. Please check your credentials.');
@@ -90,6 +90,15 @@ const Login = () => {
               </button>
             </div>
           </form>
+        </div>
+        <div className="text-center mt-6">
+          <span className="text-gray-600 text-sm">Don't have an account?</span>{' '}
+          <a
+            href="/signup"
+            className="text-indigo-600 hover:text-indigo-800 font-medium text-sm"
+          >
+            Sign up and create account
+          </a>
         </div>
       </div>
     </div>

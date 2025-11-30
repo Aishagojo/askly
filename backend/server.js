@@ -1,53 +1,64 @@
-import express from 'express';
-import cors from 'cors';
-import bodyParser from 'body-parser';
-import dotenv from 'dotenv';
-import OpenAI from 'openai';
+// server.js
+// Main backend server for Askly chatbot
 
-// Load environment variables from .env file
-dotenv.config();
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const { getChatbotResponse } = require('./services/openaiService');
+const { saveMessage, getRecentMessages } = require('./services/firestoreService');
 
-// Create express app
 const app = express();
-const PORT = 5000;
-
-// Middleware
 app.use(cors());
 app.use(bodyParser.json());
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-// Route to handle chat messages
-app.post('/ask', async (req, res) => {
-  const { message, mood } = req.body;
-
-  try {
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: [
-        {
-          role: 'system',
-          content: `You are Askly, a kind and supportive therapy chatbot. The user's mood is: ${mood || 'unknown'}. Be gentle, empathetic, and helpful.`,
-        },
-        {
-          role: 'user',
-          content: message,
-        },
-      ],
-    });
-
-    const reply = completion.choices[0].message.content;
-    res.json({ reply });
-  } catch (error) {
-    console.error('OpenAI Error:', error.message);
-    res.status(500).json({ reply: "Sorry, something went wrong. Please try again later." });
+// Chatbot API endpoint
+app.post('/api/chat', async (req, res) => {
+  const { message, userId } = req.body;
+  if (!message || !userId) {
+    return res.status(400).json({ error: 'Message and userId are required.' });
   }
+  // Save user message
+  await saveMessage(userId, message, 'user');
+  // Get recent history
+  const history = await getRecentMessages(userId, 5);
+  // Prepare messages for OpenAI
+  const openaiMessages = [
+    { role: 'system', content: 'You are Askly, an empathetic therapy chatbot for mental wellness support.' },
+    ...history.map(h => ({ role: h.sender === 'user' ? 'user' : 'assistant', content: h.message })),
+    { role: 'user', content: message }
+  ];
+  const response = await getChatbotResponse(openaiMessages);
+  // Save bot response
+  await saveMessage(userId, response, 'assistant');
+  res.json({ response });
 });
 
+// Journal API endpoints
+const { saveJournalEntry, getJournalEntries } = require('./services/journalService');
 
+app.post('/api/journal', async (req, res) => {
+  const { entry, userId } = req.body;
+  if (!entry || !userId) {
+    return res.status(400).json({ error: 'Entry and userId are required.' });
+  }
+  await saveJournalEntry(userId, entry);
+  res.json({ success: true });
+});
+
+app.get('/api/journal/:userId', async (req, res) => {
+  const { userId } = req.params;
+  if (!userId) {
+    return res.status(400).json({ error: 'userId is required.' });
+  }
+  const entries = await getJournalEntries(userId, 10);
+  res.json({ entries });
+});
+// Health check
+app.get('/', (req, res) => {
+  res.send('Askly Therapy Chatbot Backend is running.');
+});
+
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
