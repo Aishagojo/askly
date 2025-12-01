@@ -15,8 +15,7 @@ All user data is private and protected. Askly is designed for ease of use, secur
 - **Frontend:** React.js, Tailwind CSS
 - **Backend:** Node.js, Express.js
 - **Authentication & Data:** Firebase Auth, Firestore
-- **AI Chatbot:** OpenAI API (or Gemini)
-- **Other:** Vercel (deployment), modern REST API, protected routes
+- **AI Chatbot:** OpenAI API
 
 ## Features
 - Secure user authentication (Firebase)
