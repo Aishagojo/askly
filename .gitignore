@@ -11,7 +11,6 @@ node_modules
 # Ignore sensitive keys and config
 serviceAccountKey.json
 firebaseServiceAccount.json
-*.key
 *.pem
 *.p12
 *.crt
